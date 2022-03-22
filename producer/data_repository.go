@@ -1033,6 +1033,7 @@ func PolicyDataSubsToNotifyPostProcedure(PolicyDataSubscription models.PolicyDat
 	/* TODO: [Test] Write Data to ckpt */
 	defer func() {
 		go udrSelf.UpdateSubscriptionID()
+		go udrSelf.UpdatePolicyData()
 	}()
 	
 	return locationHeader
@@ -1062,7 +1063,7 @@ func PolicyDataSubsToNotifySubsIdDeleteProcedure(subsId string) (problemDetails 
 
 	/* TODO: [Test] Write Data to ckpt */
 	defer func() {
-		go udrSelf.UpdateSubscriptionOrPolicyData()
+		go udrSelf.UpdatePolicyData()
 	}()
 
 	return nil
@@ -1095,7 +1096,7 @@ func PolicyDataSubsToNotifySubsIdPutProcedure(subsId string,
 
 	/* TODO: [Test] Write Data to ckpt */
 	defer func() {
-		go udrSelf.UpdateSubscriptionOrPolicyData()
+		go udrSelf.UpdatePolicyData()
 	}()
 
 	return &policyDataSubscription, nil
@@ -1772,6 +1773,9 @@ func RemoveEeGroupSubscriptionsProcedure(ueGroupId string, subsId string) *model
 	delete(UEGroupSubsData.EeSubscriptions, subsId)
 
 	/* TODO: Write Data to ckpt */
+	defer func() {
+		go udrSelf.UpdateUEGroupColl()
+	}()
 
 	return nil
 }
@@ -1809,6 +1813,9 @@ func UpdateEeGroupSubscriptionsProcedure(ueGroupId string, subsId string,
 	UEGroupSubsData.EeSubscriptions[subsId] = &EeSubscription
 
 	/* TODO: Write Data to ckpt */
+	defer func() {
+		go udrSelf.UpdateUEGroupColl()
+	}()
 
 	return nil
 }
@@ -1849,6 +1856,11 @@ func CreateEeGroupSubscriptionsProcedure(ueGroupId string, EeSubscription models
 		udrSelf.GetIPv4GroupUri(udr_context.NUDR_DR), ueGroupId, newSubscriptionID)
 
 	/* TODO: Write Data to ckpt */
+	defer func() {
+		go udrSelf.UpdateUEGroupColl()
+		go udrSelf.UpdateUESubsColl()
+		go udrSelf.UpdateSubscriptionID()
+	}()
 
 	return locationHeader
 }
@@ -1918,6 +1930,9 @@ func RemoveeeSubscriptionsProcedure(ueId string, subsId string) *models.ProblemD
 	delete(UESubsData.EeSubscriptionCollection, subsId)
 
 	/* TODO: Write Data to ckpt */
+	defer func() {
+		go udrSelf.UpdateUESubsColl()
+	}()
 
 	return nil
 }
@@ -1955,6 +1970,9 @@ func UpdateEesubscriptionsProcedure(ueId string, subsId string,
 	UESubsData.EeSubscriptionCollection[subsId].EeSubscriptions = &EeSubscription
 
 	/* TODO: Write Data to ckpt */
+	defer func() {
+		go udrSelf.UpdateUESubsColl()
+	}()
 
 	return nil
 }
@@ -1996,6 +2014,10 @@ func CreateEeSubscriptionsProcedure(ueId string, EeSubscription models.EeSubscri
 		udrSelf.GetIPv4GroupUri(udr_context.NUDR_DR), ueId, newSubscriptionID)
 
 	/* TODO: Write Data to ckpt */
+	defer func() {
+		go udrSelf.UpdateUESubsColl()
+		go udrSelf.UpdateSubscriptionID()
+	}()
 
 	return locationHeader
 }
@@ -2435,6 +2457,9 @@ func RemovesdmSubscriptionsProcedure(ueId string, subsId string) *models.Problem
 	delete(UESubsData.SdmSubscriptions, subsId)
 
 	/* TODO: Write Data to ckpt */
+	defer func() {
+		go udrSelf.UpdateUESubsColl()
+	}()
 
 	return nil
 }
@@ -2473,6 +2498,9 @@ func UpdatesdmsubscriptionsProcedure(ueId string, subsId string,
 	UESubsData.SdmSubscriptions[subsId] = &SdmSubscription
 
 	/* TODO: Write Data to ckpt */
+	defer func() {
+		go udrSelf.UpdateUESubsColl()
+	}()
 
 	return nil
 }
@@ -2516,6 +2544,10 @@ func CreateSdmSubscriptionsProcedure(SdmSubscription models.SdmSubscription,
 		udrSelf.GetIPv4GroupUri(udr_context.NUDR_DR), ueId, newSubscriptionID)
 
 	/* TODO: Write Data to ckpt */
+	defer func() {
+		go udrSelf.UpdateUESubsColl()
+		go udrSelf.UpdateSubscriptionID()
+	}()
 
 	return locationHeader, SdmSubscription
 }
@@ -2976,6 +3008,7 @@ func PostSubscriptionDataSubscriptionsProcedure(
 	
 	/* TODO: [Test] Write Data to ckpt */
 	defer func() {
+		go udrSelf.UpdateSubscriptionData()
 		go udrSelf.UpdateSubscriptionID()
 	}()
 
@@ -3006,7 +3039,7 @@ func RemovesubscriptionDataSubscriptionsProcedure(subsId string) *models.Problem
 
 	/* TODO: [Test] Write Data to ckpt */
 	defer func() {
-		go udrSelf.UpdateSubscriptionOrPolicyData()
+		go udrSelf.UpdateSubscriptionData()
 	}()
 
 	return nil
