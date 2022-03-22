@@ -29,23 +29,32 @@ func init() {
 
 type UDRContext struct {
 	Name                                    string
-	UriScheme                               models.UriScheme
-	BindingIPv4                             string
-	SBIPort                                 int
-	RegisterIPv4                            string // IP register to NRF
-	HttpIPv6Address                         string
-	NfId                                    string
-	NrfUri                                  string
-	EeSubscriptionIDGenerator               int
-	SdmSubscriptionIDGenerator              int
-	PolicyDataSubscriptionIDGenerator       int
+	UriScheme                               models.UriScheme // from: config
+	BindingIPv4                             string // from: config
+	SBIPort                                 int // from: config
+	RegisterIPv4                            string // from: config, IP register to NRF
+	HttpIPv6Address                         string // not found
+	NfId                                    string // from: config
+	NrfUri                                  string // from: config
+	EeSubscriptionIDGenerator               int // from: init()
+	SdmSubscriptionIDGenerator              int // from: init()
+	PolicyDataSubscriptionIDGenerator       int // from: init()
 	UESubsCollection                        sync.Map // map[ueId]*UESubsData
 	UEGroupCollection                       sync.Map // map[ueGroupId]*UEGroupSubsData
-	SubscriptionDataSubscriptionIDGenerator int
+	SubscriptionDataSubscriptionIDGenerator int // from: init()
 	SubscriptionDataSubscriptions           map[subsId]*models.SubscriptionDataSubscriptions
 	PolicyDataSubscriptions                 map[subsId]*models.PolicyDataSubscription
 	appDataInfluDataSubscriptionIdGenerator uint64
 	mtx                                     sync.RWMutex
+}
+
+type UDRContextBackup struct {
+	EeSubscriptionIDGenerator               int
+	SdmSubscriptionIDGenerator              int
+	PolicyDataSubscriptionIDGenerator       int
+	SubscriptionDataSubscriptionIDGenerator int
+	SubscriptionDataSubscriptions           map[subsId]*models.SubscriptionDataSubscriptions
+	PolicyDataSubscriptions                 map[subsId]*models.PolicyDataSubscription
 }
 
 type UESubsData struct {

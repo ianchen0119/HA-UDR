@@ -1030,6 +1030,8 @@ func PolicyDataSubsToNotifyPostProcedure(PolicyDataSubscription models.PolicyDat
 	locationHeader := fmt.Sprintf("%s/policy-data/subs-to-notify/%s", udrSelf.GetIPv4GroupUri(udr_context.NUDR_DR),
 		newSubscriptionID)
 
+	/* TODO: Write Data to ckpt */
+
 	return locationHeader
 }
 
@@ -1054,6 +1056,8 @@ func PolicyDataSubsToNotifySubsIdDeleteProcedure(subsId string) (problemDetails 
 		return util.ProblemDetailsNotFound("SUBSCRIPTION_NOT_FOUND")
 	}
 	delete(udrSelf.PolicyDataSubscriptions, subsId)
+
+	/* TODO: Write Data to ckpt */
 
 	return nil
 }
@@ -1082,6 +1086,8 @@ func PolicyDataSubsToNotifySubsIdPutProcedure(subsId string,
 	}
 
 	udrSelf.PolicyDataSubscriptions[subsId] = &policyDataSubscription
+
+	/* TODO: Write Data to ckpt */
 
 	return &policyDataSubscription, nil
 }
@@ -2939,6 +2945,8 @@ func PostSubscriptionDataSubscriptionsProcedure(
 	   to the structure: {apiRoot}/subscription-data/subs-to-notify/{subsId} */
 	locationHeader := fmt.Sprintf("%s/subscription-data/subs-to-notify/%s",
 		udrSelf.GetIPv4GroupUri(udr_context.NUDR_DR), newSubscriptionID)
+	
+	/* TODO: Write Data to ckpt */
 
 	return locationHeader
 }
@@ -2964,6 +2972,9 @@ func RemovesubscriptionDataSubscriptionsProcedure(subsId string) *models.Problem
 		return util.ProblemDetailsNotFound("SUBSCRIPTION_NOT_FOUND")
 	}
 	delete(udrSelf.SubscriptionDataSubscriptions, subsId)
+
+	/* TODO: Write Data to ckpt */
+
 	return nil
 }
 

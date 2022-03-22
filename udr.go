@@ -10,6 +10,7 @@ import (
 	"github.com/free5gc/udr/logger"
 	udr_service "github.com/free5gc/udr/service"
 	"github.com/free5gc/version"
+	"github.com/ianchen0119/GO-CPSV/cpsv"
 )
 
 var UDR = &udr_service.UDR{}
@@ -30,6 +31,8 @@ func main() {
 	app.Flags = UDR.GetCliCmd()
 	if err := app.Run(os.Args); err != nil {
 		appLog.Errorf("UDR Run error: %v", err)
+	} else {
+		cpsv.Start("safCkpt=TEST1,safApp=safCkptService")
 	}
 }
 
