@@ -1030,8 +1030,11 @@ func PolicyDataSubsToNotifyPostProcedure(PolicyDataSubscription models.PolicyDat
 	locationHeader := fmt.Sprintf("%s/policy-data/subs-to-notify/%s", udrSelf.GetIPv4GroupUri(udr_context.NUDR_DR),
 		newSubscriptionID)
 
-	/* TODO: Write Data to ckpt */
-
+	/* TODO: [Test] Write Data to ckpt */
+	defer func() {
+		go udrSelf.UpdateSubscriptionID()
+	}()
+	
 	return locationHeader
 }
 
@@ -1057,7 +1060,10 @@ func PolicyDataSubsToNotifySubsIdDeleteProcedure(subsId string) (problemDetails 
 	}
 	delete(udrSelf.PolicyDataSubscriptions, subsId)
 
-	/* TODO: Write Data to ckpt */
+	/* TODO: [Test] Write Data to ckpt */
+	defer func() {
+		go udrSelf.UpdateSubscriptionOrPolicyData()
+	}()
 
 	return nil
 }
@@ -1087,7 +1093,10 @@ func PolicyDataSubsToNotifySubsIdPutProcedure(subsId string,
 
 	udrSelf.PolicyDataSubscriptions[subsId] = &policyDataSubscription
 
-	/* TODO: Write Data to ckpt */
+	/* TODO: [Test] Write Data to ckpt */
+	defer func() {
+		go udrSelf.UpdateSubscriptionOrPolicyData()
+	}()
 
 	return &policyDataSubscription, nil
 }
@@ -1762,6 +1771,8 @@ func RemoveEeGroupSubscriptionsProcedure(ueGroupId string, subsId string) *model
 	}
 	delete(UEGroupSubsData.EeSubscriptions, subsId)
 
+	/* TODO: Write Data to ckpt */
+
 	return nil
 }
 
@@ -1796,6 +1807,8 @@ func UpdateEeGroupSubscriptionsProcedure(ueGroupId string, subsId string,
 		return util.ProblemDetailsNotFound("SUBSCRIPTION_NOT_FOUND")
 	}
 	UEGroupSubsData.EeSubscriptions[subsId] = &EeSubscription
+
+	/* TODO: Write Data to ckpt */
 
 	return nil
 }
@@ -1834,6 +1847,8 @@ func CreateEeGroupSubscriptionsProcedure(ueGroupId string, EeSubscription models
 	   to the structure: {apiRoot}/nudr-dr/v1/subscription-data/group-data/{ueGroupId}/ee-subscriptions */
 	locationHeader := fmt.Sprintf("%s/nudr-dr/v1/subscription-data/group-data/%s/ee-subscriptions/%s",
 		udrSelf.GetIPv4GroupUri(udr_context.NUDR_DR), ueGroupId, newSubscriptionID)
+
+	/* TODO: Write Data to ckpt */
 
 	return locationHeader
 }
@@ -1901,6 +1916,9 @@ func RemoveeeSubscriptionsProcedure(ueId string, subsId string) *models.ProblemD
 		return util.ProblemDetailsNotFound("SUBSCRIPTION_NOT_FOUND")
 	}
 	delete(UESubsData.EeSubscriptionCollection, subsId)
+
+	/* TODO: Write Data to ckpt */
+
 	return nil
 }
 
@@ -1935,6 +1953,8 @@ func UpdateEesubscriptionsProcedure(ueId string, subsId string,
 		return util.ProblemDetailsNotFound("SUBSCRIPTION_NOT_FOUND")
 	}
 	UESubsData.EeSubscriptionCollection[subsId].EeSubscriptions = &EeSubscription
+
+	/* TODO: Write Data to ckpt */
 
 	return nil
 }
@@ -1974,6 +1994,8 @@ func CreateEeSubscriptionsProcedure(ueId string, EeSubscription models.EeSubscri
 	   to the structure: {apiRoot}/subscription-data/{ueId}/context-data/ee-subscriptions/{subsId} */
 	locationHeader := fmt.Sprintf("%s/subscription-data/%s/context-data/ee-subscriptions/%s",
 		udrSelf.GetIPv4GroupUri(udr_context.NUDR_DR), ueId, newSubscriptionID)
+
+	/* TODO: Write Data to ckpt */
 
 	return locationHeader
 }
@@ -2412,6 +2434,8 @@ func RemovesdmSubscriptionsProcedure(ueId string, subsId string) *models.Problem
 	}
 	delete(UESubsData.SdmSubscriptions, subsId)
 
+	/* TODO: Write Data to ckpt */
+
 	return nil
 }
 
@@ -2447,6 +2471,8 @@ func UpdatesdmsubscriptionsProcedure(ueId string, subsId string,
 	}
 	SdmSubscription.SubscriptionId = subsId
 	UESubsData.SdmSubscriptions[subsId] = &SdmSubscription
+
+	/* TODO: Write Data to ckpt */
 
 	return nil
 }
@@ -2488,6 +2514,8 @@ func CreateSdmSubscriptionsProcedure(SdmSubscription models.SdmSubscription,
 	   to the structure: {apiRoot}/subscription-data/{ueId}/context-data/sdm-subscriptions/{subsId}' */
 	locationHeader := fmt.Sprintf("%s/subscription-data/%s/context-data/sdm-subscriptions/%s",
 		udrSelf.GetIPv4GroupUri(udr_context.NUDR_DR), ueId, newSubscriptionID)
+
+	/* TODO: Write Data to ckpt */
 
 	return locationHeader, SdmSubscription
 }
@@ -2946,7 +2974,10 @@ func PostSubscriptionDataSubscriptionsProcedure(
 	locationHeader := fmt.Sprintf("%s/subscription-data/subs-to-notify/%s",
 		udrSelf.GetIPv4GroupUri(udr_context.NUDR_DR), newSubscriptionID)
 	
-	/* TODO: Write Data to ckpt */
+	/* TODO: [Test] Write Data to ckpt */
+	defer func() {
+		go udrSelf.UpdateSubscriptionID()
+	}()
 
 	return locationHeader
 }
@@ -2973,7 +3004,10 @@ func RemovesubscriptionDataSubscriptionsProcedure(subsId string) *models.Problem
 	}
 	delete(udrSelf.SubscriptionDataSubscriptions, subsId)
 
-	/* TODO: Write Data to ckpt */
+	/* TODO: [Test] Write Data to ckpt */
+	defer func() {
+		go udrSelf.UpdateSubscriptionOrPolicyData()
+	}()
 
 	return nil
 }

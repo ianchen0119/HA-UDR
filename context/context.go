@@ -48,15 +48,6 @@ type UDRContext struct {
 	mtx                                     sync.RWMutex
 }
 
-type UDRContextBackup struct {
-	EeSubscriptionIDGenerator               int
-	SdmSubscriptionIDGenerator              int
-	PolicyDataSubscriptionIDGenerator       int
-	SubscriptionDataSubscriptionIDGenerator int
-	SubscriptionDataSubscriptions           map[subsId]*models.SubscriptionDataSubscriptions
-	PolicyDataSubscriptions                 map[subsId]*models.PolicyDataSubscription
-}
-
 type UESubsData struct {
 	EeSubscriptionCollection map[subsId]*EeSubscriptionCollection
 	SdmSubscriptions         map[subsId]*models.SdmSubscription
