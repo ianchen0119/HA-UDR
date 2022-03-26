@@ -45,7 +45,7 @@ func (context *UDRContext) UpdateUEGroupColl() {
 	len := len(jsonData)
 
 	logger.DataRepoLog.Infoln("Update UEGroupColl")
-	logger.DataRepoLog.Infoln(jsonData)
+	logger.DataRepoLog.Infoln(string(jsonData))
 
 	cpsv.NonFixedStore("UDR_UEGroupColl", jsonData, int(len))
 }
@@ -60,7 +60,7 @@ func (context *UDRContext) UpdateUESubsColl() {
 	len := len(jsonData)
 
 	logger.DataRepoLog.Infoln("Update UESubsColl")
-	logger.DataRepoLog.Infoln(jsonData)
+	logger.DataRepoLog.Infoln(string(jsonData))
 
 	cpsv.NonFixedStore("UDR_UESubsColl", jsonData, int(len))
 }
@@ -111,7 +111,7 @@ func (context *UDRContext) UpdateSubscriptionData() {
 	len := len(jsonData)
 
 	logger.DataRepoLog.Infoln("Update Subscription Data")
-	logger.DataRepoLog.Infoln(jsonData)
+	logger.DataRepoLog.Infoln(string(jsonData))
 
 	cpsv.NonFixedStore("UDR_SubscriptionData", jsonData, int(len))
 }
@@ -124,7 +124,7 @@ func (context *UDRContext) UpdatePolicyData() {
 	len := len(jsonData)
 
 	logger.DataRepoLog.Infoln("Update Policy Data")
-	logger.DataRepoLog.Infoln(jsonData)
+	logger.DataRepoLog.Infoln(string(jsonData))
 
 	cpsv.NonFixedStore("UDR_PolicyData", jsonData, int(len))
 }
@@ -140,7 +140,7 @@ func (context *UDRContext) UpdateSubscriptionID() {
 	len := len(jsonData)
 
 	logger.DataRepoLog.Infoln("Update Subscription ID")
-	logger.DataRepoLog.Infoln(jsonData)
+	logger.DataRepoLog.Infoln(string(jsonData))
 
 	cpsv.Store("UDR_SubscriptionID", jsonData, int(len), 0)
 }
