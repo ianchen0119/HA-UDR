@@ -1,11 +1,12 @@
 package context
 
 import (
-	"fmt"
+	// "fmt"
 	"sync"
 	"encoding/json"
 	"github.com/free5gc/openapi/models"
 	"github.com/ianchen0119/GO-CPSV/cpsv"
+	"github.com/free5gc/udr/logger"
 )
 
 type BackupIDSet struct {
@@ -62,7 +63,7 @@ func (context *UDRContext) GetUEGroupColl() error {
 	readData, err := cpsv.NonFixedLoad("UDR_UEGroupColl")
 	if err == nil {
 		tmpMap :=  make(map[interface{}]interface{})
-		fmt.Println(readData)
+		logger.DataRepoLog.Infof(readData)
 		err = json.Unmarshal(readData, &tmpMap)
 		if err == nil {
 			ueGroupColl := &sync.Map{}
@@ -81,7 +82,7 @@ func (context *UDRContext) GetUESubsColl() error {
 	readData, err := cpsv.NonFixedLoad("UDR_UESubsColl")
 	if err == nil {
 		tmpMap :=  make(map[interface{}]interface{})
-		fmt.Println(readData)
+		logger.DataRepoLog.Infof(readData)
 		err = json.Unmarshal(readData, &tmpMap)
 		if err == nil {
 			ueSubsColl := &sync.Map{}
@@ -133,7 +134,7 @@ func (context *UDRContext) GetSubscriptionData() error {
 	readData, err := cpsv.NonFixedLoad("UDR_SubscriptionData")
 
 	if err == nil {
-		fmt.Println(readData)
+		logger.DataRepoLog.Infof(readData)
 		var subscriptionData = SubscriptionData{}
 		json.Unmarshal(readData, &subscriptionData)
 		context.SubscriptionDataSubscriptions = subscriptionData.SubscriptionDataSubscriptions
@@ -147,7 +148,7 @@ func (context *UDRContext) GetPolicyData() error {
 	readData, err := cpsv.NonFixedLoad("UDR_PolicyData")
 
 	if err == nil {
-		fmt.Println(readData)
+		logger.DataRepoLog.Infof(readData)
 		var policyData = PolicyData{}
 		json.Unmarshal(readData, &policyData)
 		context.PolicyDataSubscriptions = policyData.PolicyDataSubscriptions
@@ -162,7 +163,7 @@ func (context *UDRContext) GetSubscriptionID() error {
 	readData, err := cpsv.Load("UDR_SubscriptionID", 0, len)
 
 	if err == nil {
-		fmt.Println(readData)
+		logger.DataRepoLog.Infof(readData)
 		var backupIDSet = BackupIDSet{}
 		json.Unmarshal(readData, &backupIDSet)
 		context.EeSubscriptionIDGenerator = backupIDSet.EeSubscriptionIDGenerator

@@ -32,7 +32,7 @@ func main() {
 	if err := app.Run(os.Args); err != nil {
 		appLog.Errorf("UDR Run error: %v", err)
 	} else {
-		cpsv.Start("safCkpt=TEST1,safApp=safCkptService")
+		cpsv.Start("safCkpt=HAUDR,safApp=safCkptService")
 	}
 }
 
