@@ -35,19 +35,65 @@ type UESubsColl struct {
 // ref: https://stackoverflow.com/questions/46390409/how-to-decode-json-strings-to-sync-map-instead-of-normal-map-in-go1-9
 
 func (context *UDRContext) UpdateUEGroupColl() {
+	ueGroupColl :=  make(map[interface{}]interface{})
+	context.UEGroupCollection.Range(func(k, v interface{}) bool {
+		ueGroupColl[k] = v
+		return true
+	})
+	jsonData, _ := json.Marshal(ueGroupColl)
+	len := len(jsonData)
 
+	cpsv.NonFixedStore("UDR_UEGroupColl", jsonData, int(len))
 }
 
 func (context *UDRContext) UpdateUESubsColl() {
+	ueSubsColl :=  make(map[interface{}]interface{})
+	context.UESubsCollection.Range(func(k, v interface{}) bool {
+		ueSubsColl[k] = v
+		return true
+	})
+	jsonData, _ := json.Marshal(ueSubsColl)
+	len := len(jsonData)
 
+	cpsv.NonFixedStore("UDR_UESubsColl", jsonData, int(len))
 }
 
-func (context *UDRContext) GetUEGroupColl() {
-
+func (context *UDRContext) GetUEGroupColl() error {
+	readData, err := cpsv.NonFixedLoad("UDR_UEGroupColl")
+	if err == nil {
+		tmpMap :=  make(map[interface{}]interface{})
+		fmt.Println(readData)
+		err = json.Unmarshal(readData, &tmpMap)
+		if err == nil {
+			ueGroupColl := &sync.Map{}
+			for k, v := range tmpMap {
+				ueGroupColl.Store(k, v)
+			}
+			context.UEGroupCollection = *ueGroupColl
+		}
+		return err
+	} else {
+		return err
+	}
 }
 
-func (context *UDRContext) GetUESubsColl() {
-
+func (context *UDRContext) GetUESubsColl() error {
+	readData, err := cpsv.NonFixedLoad("UDR_UESubsColl")
+	if err == nil {
+		tmpMap :=  make(map[interface{}]interface{})
+		fmt.Println(readData)
+		err = json.Unmarshal(readData, &tmpMap)
+		if err == nil {
+			ueSubsColl := &sync.Map{}
+			for k, v := range tmpMap {
+				ueSubsColl.Store(k, v)
+			}
+			context.UESubsCollection = *ueSubsColl
+		}
+		return err
+	} else {
+		return err
+	}
 }
 
 func (context *UDRContext) UpdateSubscriptionData() {
