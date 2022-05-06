@@ -55,18 +55,18 @@ func action(c *cli.Context) error {
 		fmt.Println(sig)
 		if sig == syscall.SIGUSR1 {
 			fmt.Println("Swtiching to Active mode...")
-			udrSelf.GetUEGroupColl()
-			udrSelf.GetUESubsColl()
-			udrSelf.GetSubscriptionData()
-			udrSelf.GetPolicyData()
-			udrSelf.GetSubscriptionID()
+			go udrSelf.GetUEGroupColl()
+			go udrSelf.GetUESubsColl()
+			go udrSelf.GetSubscriptionData()
+			go udrSelf.GetPolicyData()
+			go udrSelf.GetSubscriptionID()
 		} else if sig == syscall.SIGUSR2 {
 			fmt.Println("Swtiching to Standby mode...")
-			udrSelf.UpdateUEGroupColl()
-			udrSelf.UpdateUESubsColl()
-			udrSelf.UpdateSubscriptionData()
-			udrSelf.UpdatePolicyData()
-			udrSelf.UpdateSubscriptionID()
+			go udrSelf.UpdateUEGroupColl()
+			go udrSelf.UpdateUESubsColl()
+			go udrSelf.UpdateSubscriptionData()
+			go udrSelf.UpdatePolicyData()
+			go udrSelf.UpdateSubscriptionID()
 		}
 	}()
 
