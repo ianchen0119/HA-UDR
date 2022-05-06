@@ -69,6 +69,7 @@ func (context *UDRContext) UpdateUESubsColl() {
 func (context *UDRContext) GetUEGroupColl() error {
 	readData, err := cpsv.NonFixedLoad("UDR_UEGroupColl")
 	if err == nil {
+		logger.DataRepoLog.Infoln("Get UEGroupColl")
 		tmpMap :=  make(map[interface{}]interface{})
 		logger.DataRepoLog.Infoln(string(readData))
 		err = json.Unmarshal(readData, &tmpMap)
@@ -81,6 +82,7 @@ func (context *UDRContext) GetUEGroupColl() error {
 		}
 		return err
 	} else {
+		logger.DataRepoLog.Infoln("ERR: Get UEGroupColl")
 		return err
 	}
 }
@@ -88,6 +90,7 @@ func (context *UDRContext) GetUEGroupColl() error {
 func (context *UDRContext) GetUESubsColl() error {
 	readData, err := cpsv.NonFixedLoad("UDR_UESubsColl")
 	if err == nil {
+		logger.DataRepoLog.Infoln("Get UESubsColl")
 		tmpMap :=  make(map[interface{}]interface{})
 		logger.DataRepoLog.Infoln(string(readData))
 		err = json.Unmarshal(readData, &tmpMap)
@@ -100,6 +103,7 @@ func (context *UDRContext) GetUESubsColl() error {
 		}
 		return err
 	} else {
+		logger.DataRepoLog.Infoln("ERR: Get UESubsColl")
 		return err
 	}
 }
@@ -162,12 +166,14 @@ func (context *UDRContext) GetSubscriptionData() error {
 	readData, err := cpsv.NonFixedLoad("UDR_SubscriptionData")
 
 	if err == nil {
+		logger.DataRepoLog.Infoln("Get Sub Data")
 		logger.DataRepoLog.Infoln(string(readData))
 		var subscriptionData = SubscriptionData{}
 		json.Unmarshal(readData, &subscriptionData)
 		context.SubscriptionDataSubscriptions = subscriptionData.SubscriptionDataSubscriptions
 		return nil
 	} else {
+		logger.DataRepoLog.Infoln("ERR: Get Sub Data")
 		return err
 	}
 }
@@ -176,12 +182,14 @@ func (context *UDRContext) GetPolicyData() error {
 	readData, err := cpsv.NonFixedLoad("UDR_PolicyData")
 
 	if err == nil {
+		logger.DataRepoLog.Infoln("Get Policy Data")
 		logger.DataRepoLog.Infoln(string(readData))
 		var policyData = PolicyData{}
 		json.Unmarshal(readData, &policyData)
 		context.PolicyDataSubscriptions = policyData.PolicyDataSubscriptions
 		return nil
 	} else {
+		logger.DataRepoLog.Infoln("ERR: Get Policy Data")
 		return err
 	}
 }
@@ -191,6 +199,7 @@ func (context *UDRContext) GetSubscriptionID() error {
 	readData, err := cpsv.Load("UDR_SubscriptionID", 0, len)
 
 	if err == nil {
+		logger.DataRepoLog.Infoln("Get Subscription ID")
 		logger.DataRepoLog.Infoln(string(readData))
 		var backupIDSet = BackupIDSet{}
 		json.Unmarshal(readData, &backupIDSet)
@@ -200,6 +209,7 @@ func (context *UDRContext) GetSubscriptionID() error {
 		context.SubscriptionDataSubscriptionIDGenerator = backupIDSet.SubscriptionDataSubscriptionIDGenerator
 		return nil
 	} else {
+		logger.DataRepoLog.Infoln("ERR: Get Subscription ID")
 		return err
 	}
 }
