@@ -32,9 +32,6 @@ type UESubsColl struct {
 	UESubsCollection                        sync.Map // map[ueId]*UESubsData
 }
 
-/* TODO: update and get BackupCollection */
-// ref: https://stackoverflow.com/questions/46390409/how-to-decode-json-strings-to-sync-map-instead-of-normal-map-in-go1-9
-
 func (context *UDRContext) UpdateUEGroupColl() {
 	ueGroupColl :=  make(map[interface{}]interface{})
 	context.UEGroupCollection.Range(func(k, v interface{}) bool {
@@ -73,7 +70,7 @@ func (context *UDRContext) GetUEGroupColl() error {
 	readData, err := cpsv.NonFixedLoad("UDR_UEGroupColl")
 	if err == nil {
 		tmpMap :=  make(map[interface{}]interface{})
-		logger.DataRepoLog.Infoln(readData)
+		logger.DataRepoLog.Infoln(string(readData))
 		err = json.Unmarshal(readData, &tmpMap)
 		if err == nil {
 			ueGroupColl := &sync.Map{}
@@ -92,7 +89,7 @@ func (context *UDRContext) GetUESubsColl() error {
 	readData, err := cpsv.NonFixedLoad("UDR_UESubsColl")
 	if err == nil {
 		tmpMap :=  make(map[interface{}]interface{})
-		logger.DataRepoLog.Infoln(readData)
+		logger.DataRepoLog.Infoln(string(readData))
 		err = json.Unmarshal(readData, &tmpMap)
 		if err == nil {
 			ueSubsColl := &sync.Map{}
@@ -165,7 +162,7 @@ func (context *UDRContext) GetSubscriptionData() error {
 	readData, err := cpsv.NonFixedLoad("UDR_SubscriptionData")
 
 	if err == nil {
-		logger.DataRepoLog.Infoln(readData)
+		logger.DataRepoLog.Infoln(string(readData))
 		var subscriptionData = SubscriptionData{}
 		json.Unmarshal(readData, &subscriptionData)
 		context.SubscriptionDataSubscriptions = subscriptionData.SubscriptionDataSubscriptions
@@ -179,7 +176,7 @@ func (context *UDRContext) GetPolicyData() error {
 	readData, err := cpsv.NonFixedLoad("UDR_PolicyData")
 
 	if err == nil {
-		logger.DataRepoLog.Infoln(readData)
+		logger.DataRepoLog.Infoln(string(readData))
 		var policyData = PolicyData{}
 		json.Unmarshal(readData, &policyData)
 		context.PolicyDataSubscriptions = policyData.PolicyDataSubscriptions
@@ -194,7 +191,7 @@ func (context *UDRContext) GetSubscriptionID() error {
 	readData, err := cpsv.Load("UDR_SubscriptionID", 0, len)
 
 	if err == nil {
-		logger.DataRepoLog.Infoln(readData)
+		logger.DataRepoLog.Infoln(string(readData))
 		var backupIDSet = BackupIDSet{}
 		json.Unmarshal(readData, &backupIDSet)
 		context.EeSubscriptionIDGenerator = backupIDSet.EeSubscriptionIDGenerator
