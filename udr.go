@@ -3,11 +3,14 @@ package main
 import (
 	"fmt"
 	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
 
 	"github.com/free5gc/udr/logger"
+	udr_context "github.com/free5gc/udr/context"
 	udr_service "github.com/free5gc/udr/service"
 	"github.com/free5gc/version"
 	"github.com/ianchen0119/GO-CPSV/cpsv"
@@ -41,6 +44,31 @@ func action(c *cli.Context) error {
 		logger.CfgLog.Errorf("%+v", err)
 		return fmt.Errorf("Failed to initialize !!")
 	}
+
+	udrSelf := udr_context.UDR_Self()
+
+	sigs := make(chan os.Signal, 1)
+	signal.Notify(sigs, syscall.SIGUSR1, syscall.SIGUSR2)
+	go func() {
+		sig := <-sigs
+		fmt.Println("Signal:")
+		fmt.Println(sig)
+		if sig == syscall.SIGUSR1 {
+			fmt.Println("Swtiching to Active mode...")
+			udrSelf.GetUEGroupColl()
+			udrSelf.GetUESubsColl()
+			udrSelf.GetSubscriptionData()
+			udrSelf.GetPolicyData()
+			udrSelf.GetSubscriptionID()
+		} else if sig == syscall.SIGUSR2 {
+			fmt.Println("Swtiching to Standby mode...")
+			udrSelf.UpdateUEGroupColl()
+			udrSelf.UpdateUESubsColl()
+			udrSelf.UpdateSubscriptionData()
+			udrSelf.UpdatePolicyData()
+			udrSelf.UpdateSubscriptionID()
+		}
+	}()
 
 	UDR.Start()
 
