@@ -45,9 +45,11 @@ func (context *UDRContext) UpdateUEGroupColl() {
 	len := len(jsonData)
 
 	logger.DataRepoLog.Infoln("Update UEGroupColl")
-	logger.DataRepoLog.Infoln(string(jsonData))
 
-	cpsv.NonFixedStore("UDR_UEGroupColl", jsonData, int(len))
+	if len != 0 {
+		logger.DataRepoLog.Infoln(string(jsonData))
+		cpsv.NonFixedStore("UDR_UEGroupColl", jsonData, int(len))
+	}
 }
 
 func (context *UDRContext) UpdateUESubsColl() {
@@ -60,9 +62,11 @@ func (context *UDRContext) UpdateUESubsColl() {
 	len := len(jsonData)
 
 	logger.DataRepoLog.Infoln("Update UESubsColl")
-	logger.DataRepoLog.Infoln(string(jsonData))
-
-	cpsv.NonFixedStore("UDR_UESubsColl", jsonData, int(len))
+	
+	if len != 0 {
+		logger.DataRepoLog.Infoln(string(jsonData))
+		cpsv.NonFixedStore("UDR_UESubsColl", jsonData, int(len))
+	}
 }
 
 func (context *UDRContext) GetUEGroupColl() error {
@@ -103,7 +107,7 @@ func (context *UDRContext) GetUESubsColl() error {
 	}
 }
 
-func (context *UDRContext) UpdateSubscriptionData() {
+func (context *UDRContext) UpdateSubscriptionData() error {
 	var subscriptionData = &SubscriptionData{}
 	subscriptionData.SubscriptionDataSubscriptions = context.SubscriptionDataSubscriptions
 
@@ -111,12 +115,16 @@ func (context *UDRContext) UpdateSubscriptionData() {
 	len := len(jsonData)
 
 	logger.DataRepoLog.Infoln("Update Subscription Data")
-	logger.DataRepoLog.Infoln(string(jsonData))
 
-	cpsv.NonFixedStore("UDR_SubscriptionData", jsonData, int(len))
+	if len != 0 {
+		logger.DataRepoLog.Infoln(string(jsonData))
+		cpsv.NonFixedStore("UDR_SubscriptionData", jsonData, int(len))
+	}
+
+	return nil
 }
 
-func (context *UDRContext) UpdatePolicyData() {
+func (context *UDRContext) UpdatePolicyData() error {
 	var policyData = &PolicyData{}
 	policyData.PolicyDataSubscriptions = context.PolicyDataSubscriptions
 
@@ -124,12 +132,16 @@ func (context *UDRContext) UpdatePolicyData() {
 	len := len(jsonData)
 
 	logger.DataRepoLog.Infoln("Update Policy Data")
-	logger.DataRepoLog.Infoln(string(jsonData))
 
-	cpsv.NonFixedStore("UDR_PolicyData", jsonData, int(len))
+	if len != 0 {
+		logger.DataRepoLog.Infoln(string(jsonData))
+		cpsv.NonFixedStore("UDR_PolicyData", jsonData, int(len))
+	}
+
+	return nil
 }
 
-func (context *UDRContext) UpdateSubscriptionID() {
+func (context *UDRContext) UpdateSubscriptionID() error {
 	var backupIDSet = &BackupIDSet{}
 	backupIDSet.EeSubscriptionIDGenerator = context.EeSubscriptionIDGenerator
 	backupIDSet.SdmSubscriptionIDGenerator = context.SdmSubscriptionIDGenerator
@@ -140,9 +152,13 @@ func (context *UDRContext) UpdateSubscriptionID() {
 	len := len(jsonData)
 
 	logger.DataRepoLog.Infoln("Update Subscription ID")
-	logger.DataRepoLog.Infoln(string(jsonData))
 
-	cpsv.Store("UDR_SubscriptionID", jsonData, int(len), 0)
+	if len != 0 {
+		logger.DataRepoLog.Infoln(string(jsonData))
+		cpsv.Store("UDR_SubscriptionID", jsonData, int(len), 0)
+	}
+
+	return nil
 }
 
 func (context *UDRContext) GetSubscriptionData() error {
