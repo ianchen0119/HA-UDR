@@ -116,6 +116,7 @@ func (context *UDRContext) UpdateSubscriptionData() error {
 	// CallbackReference string
 	// OriginalCallbackReference string
 	// MonitoredResourceUri      []string
+	// Expiry                    *time.Time 
 	// SupportedFeatures         string
 
 	var subscriptionData = &SubscriptionData{}
@@ -135,6 +136,12 @@ func (context *UDRContext) UpdateSubscriptionData() error {
 }
 
 func (context *UDRContext) UpdatePolicyData() error {
+	/* TODO: convert the data */
+	// ref: https://github.dev/free5gc/openapi/tree/main/Nudr_DataRepository
+	// NotificationUri       string   `json:"notificationUri" bson:"notificationUri"`
+	// MonitoredResourceUris []string `json:"monitoredResourceUris" bson:"monitoredResourceUris"`
+	// SupportedFeatures     string   `json:"supportedFeatures,omitempty" bson:"supportedFeatures"`
+
 	var policyData = &PolicyData{}
 	policyData.PolicyDataSubscriptions = context.PolicyDataSubscriptions
 

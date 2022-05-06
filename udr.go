@@ -52,15 +52,15 @@ func stateManage() {
 			udrSelf.GetUEGroupColl()
 			udrSelf.GetUESubsColl()
 			// udrSelf.GetSubscriptionData()
-			udrSelf.GetPolicyData()
+			// udrSelf.GetPolicyData()
 			udrSelf.GetSubscriptionID()
 		} else if sig == syscall.SIGUSR2 {
 			fmt.Println("Swtiching to Standby mode...")
-			udrSelf.UpdateUEGroupColl()
-			udrSelf.UpdateUESubsColl()
+			go udrSelf.UpdateUEGroupColl()
+			go udrSelf.UpdateUESubsColl()
 			// udrSelf.UpdateSubscriptionData()
-			udrSelf.UpdatePolicyData()
-			udrSelf.UpdateSubscriptionID()
+			// udrSelf.UpdatePolicyData()
+			go udrSelf.UpdateSubscriptionID()
 		}
 	}
 }
