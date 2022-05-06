@@ -51,14 +51,14 @@ func stateManage() {
 			fmt.Println("Swtiching to Active mode...")
 			udrSelf.GetUEGroupColl()
 			udrSelf.GetUESubsColl()
-			udrSelf.GetSubscriptionData()
+			// udrSelf.GetSubscriptionData()
 			udrSelf.GetPolicyData()
 			udrSelf.GetSubscriptionID()
 		} else if sig == syscall.SIGUSR2 {
 			fmt.Println("Swtiching to Standby mode...")
 			udrSelf.UpdateUEGroupColl()
 			udrSelf.UpdateUESubsColl()
-			udrSelf.UpdateSubscriptionData()
+			// udrSelf.UpdateSubscriptionData()
 			udrSelf.UpdatePolicyData()
 			udrSelf.UpdateSubscriptionID()
 		}

@@ -109,6 +109,15 @@ func (context *UDRContext) GetUESubsColl() error {
 }
 
 func (context *UDRContext) UpdateSubscriptionData() error {
+
+	/* TODO: convert the data */
+	// ref: https://github.dev/free5gc/openapi/tree/main/Nudr_DataRepository
+	// UeId string
+	// CallbackReference string
+	// OriginalCallbackReference string
+	// MonitoredResourceUri      []string
+	// SupportedFeatures         string
+
 	var subscriptionData = &SubscriptionData{}
 	subscriptionData.SubscriptionDataSubscriptions = context.SubscriptionDataSubscriptions
 
