@@ -36,6 +36,9 @@ func main() {
 	if err := app.Run(os.Args); err != nil {
 		appLog.Errorf("UDR Run error: %v", err)
 	}
+	for {
+		
+	}
 }
 
 func stateManage() {

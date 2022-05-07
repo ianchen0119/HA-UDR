@@ -172,7 +172,7 @@ func (context *UDRContext) UpdateSubscriptionID() error {
 
 	if len != 0 {
 		logger.DataRepoLog.Infoln(string(jsonData))
-		cpsv.Store("UDR_SubscriptionID", jsonData, int(len), 0)
+		cpsv.NonFixedStore("UDR_SubscriptionID", jsonData, int(len))
 	}
 
 	return nil
@@ -211,8 +211,7 @@ func (context *UDRContext) GetPolicyData() error {
 }
 
 func (context *UDRContext) GetSubscriptionID() error {
-	len := cpsv.GetSize(BackupIDSet{})
-	readData, err := cpsv.Load("UDR_SubscriptionID", 0, len)
+	readData, err := cpsv.NonFixedLoad("UDR_SubscriptionID")
 
 	if err == nil {
 		logger.DataRepoLog.Infoln("Get Subscription ID")
