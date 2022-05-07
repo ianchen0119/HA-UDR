@@ -32,10 +32,9 @@ func main() {
 	app.Usage = "-free5gccfg common configuration file -udrcfg udr configuration file"
 	app.Action = action
 	app.Flags = UDR.GetCliCmd()
+	cpsv.Start("safCkpt=HAUDR,safApp=safCkptService")
 	if err := app.Run(os.Args); err != nil {
 		appLog.Errorf("UDR Run error: %v", err)
-	} else {
-		cpsv.Start("safCkpt=HAUDR,safApp=safCkptService")
 	}
 }
 
