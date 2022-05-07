@@ -32,6 +32,10 @@ type UESubsColl struct {
 	UESubsCollection                        sync.Map // map[ueId]*UESubsData
 }
 
+func (context *UDRContext) StartCkptSvc() {
+	cpsv.Start("safCkpt=HAUDR,safApp=safCkptService")
+}
+
 func (context *UDRContext) UpdateUEGroupColl() {
 	ueGroupColl :=  make(map[interface{}]interface{})
 	context.UEGroupCollection.Range(func(k, v interface{}) bool {

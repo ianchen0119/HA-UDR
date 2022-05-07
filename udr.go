@@ -13,7 +13,6 @@ import (
 	udr_context "github.com/free5gc/udr/context"
 	udr_service "github.com/free5gc/udr/service"
 	"github.com/free5gc/version"
-	"github.com/ianchen0119/GO-CPSV/cpsv"
 )
 
 var UDR = &udr_service.UDR{}
@@ -32,38 +31,8 @@ func main() {
 	app.Usage = "-free5gccfg common configuration file -udrcfg udr configuration file"
 	app.Action = action
 	app.Flags = UDR.GetCliCmd()
-	cpsv.Start("safCkpt=HAUDR,safApp=safCkptService")
 	if err := app.Run(os.Args); err != nil {
 		appLog.Errorf("UDR Run error: %v", err)
-	}
-	for {
-		
-	}
-}
-
-func stateManage() {
-	udrSelf := udr_context.UDR_Self()
-	for {
-		sigs := make(chan os.Signal, 1)
-		signal.Notify(sigs, syscall.SIGUSR1, syscall.SIGUSR2)
-		sig := <-sigs
-		fmt.Println("Signal:")
-		fmt.Println(sig)
-		if sig == syscall.SIGUSR1 {
-			fmt.Println("Swtiching to Active mode...")
-			udrSelf.GetUEGroupColl()
-			udrSelf.GetUESubsColl()
-			// udrSelf.GetSubscriptionData()
-			// udrSelf.GetPolicyData()
-			udrSelf.GetSubscriptionID()
-		} else if sig == syscall.SIGUSR2 {
-			fmt.Println("Swtiching to Standby mode...")
-			go udrSelf.UpdateUEGroupColl()
-			go udrSelf.UpdateUESubsColl()
-			// udrSelf.UpdateSubscriptionData()
-			// udrSelf.UpdatePolicyData()
-			go udrSelf.UpdateSubscriptionID()
-		}
 	}
 }
 
@@ -72,8 +41,6 @@ func action(c *cli.Context) error {
 		logger.CfgLog.Errorf("%+v", err)
 		return fmt.Errorf("Failed to initialize !!")
 	}
-
-	go stateManage()
 
 	UDR.Start()
 
