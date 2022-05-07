@@ -214,6 +214,7 @@ func (udr *UDR) Start() {
 
 	/* OpenSAF Checkpoint */
 	self.StartCkptSvc()
+	self.UpdateSubscriptionID()
 	go func() {
 		for {
 			sigs := make(chan os.Signal, 1)
@@ -248,7 +249,7 @@ func (udr *UDR) Start() {
 	if err != nil {
 		initLog.Warnf("Initialize HTTP server: %+v", err)
 	}
-
+	self.GetSubscriptionID()
 	serverScheme := factory.UdrConfig.Configuration.Sbi.Scheme
 	if serverScheme == "http" {
 		err = server.ListenAndServe()
