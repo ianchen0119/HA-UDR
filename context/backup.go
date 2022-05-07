@@ -1,12 +1,15 @@
 package context
 
 import (
-	// "fmt"
+	"fmt"
 	"sync"
 	"encoding/json"
 	"github.com/free5gc/openapi/models"
 	"github.com/ianchen0119/GO-CPSV/cpsv"
 	"github.com/free5gc/udr/logger"
+	"syscall"
+	"os"
+	"os/signal"
 )
 
 type BackupIDSet struct {
@@ -32,8 +35,61 @@ type UESubsColl struct {
 	UESubsCollection                        sync.Map // map[ueId]*UESubsData
 }
 
+type Location struct {
+	X int32
+	Y int32
+	Z int32
+}
+
 func (context *UDRContext) StartCkptSvc() {
 	cpsv.Start("safCkpt=HAUDR,safApp=safCkptService")
+	for {
+		sigs := make(chan os.Signal, 1)
+		signal.Notify(sigs, syscall.SIGUSR1, syscall.SIGUSR2)
+		sig := <-sigs
+		fmt.Println("Signal:")
+		fmt.Println(sig)
+		if sig == syscall.SIGUSR1 {
+			fmt.Println("Swtiching to Active mode...")
+			context.GetUEGroupColl()
+			context.GetUESubsColl()
+			// context.GetSubscriptionData()
+			// context.GetPolicyData()
+			// context.GetSubscriptionID()
+
+			readData, _ := cpsv.NonFixedLoad("udrSubId")
+			logger.DataRepoLog.Infoln("Get Subscription ID")
+			logger.DataRepoLog.Infoln(readData)
+			logger.DataRepoLog.Infoln(string(readData))
+			var backupIDSet BackupIDSet
+			json.Unmarshal(readData, &backupIDSet)
+			context.EeSubscriptionIDGenerator = backupIDSet.EeSubscriptionIDGenerator
+			context.SdmSubscriptionIDGenerator = backupIDSet.SdmSubscriptionIDGenerator
+			context.PolicyDataSubscriptionIDGenerator = backupIDSet.PolicyDataSubscriptionIDGenerator
+			context.SubscriptionDataSubscriptionIDGenerator = backupIDSet.SubscriptionDataSubscriptionIDGenerator
+		} else if sig == syscall.SIGUSR2 {
+			fmt.Println("Swtiching to Standby mode...")
+			// context.UpdateSubscriptionID()
+			context.UpdateUEGroupColl()
+			context.UpdateUESubsColl()
+			// context.UpdateSubscriptionData()
+			// context.UpdatePolicyData()
+
+
+			var backupIDSet BackupIDSet
+			backupIDSet.EeSubscriptionIDGenerator = context.EeSubscriptionIDGenerator
+			backupIDSet.SdmSubscriptionIDGenerator = context.SdmSubscriptionIDGenerator
+			backupIDSet.PolicyDataSubscriptionIDGenerator = context.PolicyDataSubscriptionIDGenerator
+			backupIDSet.SubscriptionDataSubscriptionIDGenerator = context.SubscriptionDataSubscriptionIDGenerator
+
+			jsonData, _ := json.Marshal(&backupIDSet)
+			length := len(jsonData)
+
+			logger.DataRepoLog.Infoln("Update Subscription ID")
+			logger.DataRepoLog.Infoln(jsonData)
+			cpsv.NonFixedStore("udrSubId", jsonData, int(length))
+		}
+	}
 }
 
 func (context *UDRContext) UpdateUEGroupColl() {
@@ -163,20 +219,20 @@ func (context *UDRContext) UpdatePolicyData() error {
 }
 
 func (context *UDRContext) UpdateSubscriptionID() error {
-	var backupIDSet = &BackupIDSet{}
+	var backupIDSet BackupIDSet
 	backupIDSet.EeSubscriptionIDGenerator = context.EeSubscriptionIDGenerator
 	backupIDSet.SdmSubscriptionIDGenerator = context.SdmSubscriptionIDGenerator
 	backupIDSet.PolicyDataSubscriptionIDGenerator = context.PolicyDataSubscriptionIDGenerator
 	backupIDSet.SubscriptionDataSubscriptionIDGenerator = context.SubscriptionDataSubscriptionIDGenerator
 
-	jsonData, _ := json.Marshal(backupIDSet)
+	jsonData, _ := json.Marshal(&backupIDSet)
 	len := len(jsonData)
 
 	logger.DataRepoLog.Infoln("Update Subscription ID")
 
 	if len != 0 {
 		logger.DataRepoLog.Infoln(string(jsonData))
-		cpsv.NonFixedStore("UDR_SubscriptionID", jsonData, int(len))
+		cpsv.NonFixedStore("udrSubId", jsonData, int(len))
 	}
 
 	return nil
@@ -215,12 +271,12 @@ func (context *UDRContext) GetPolicyData() error {
 }
 
 func (context *UDRContext) GetSubscriptionID() error {
-	readData, err := cpsv.NonFixedLoad("UDR_SubscriptionID")
+	readData, err := cpsv.NonFixedLoad("udrSubId")
 
 	if err == nil {
 		logger.DataRepoLog.Infoln("Get Subscription ID")
 		logger.DataRepoLog.Infoln(string(readData))
-		var backupIDSet = BackupIDSet{}
+		var backupIDSet BackupIDSet
 		json.Unmarshal(readData, &backupIDSet)
 		context.EeSubscriptionIDGenerator = backupIDSet.EeSubscriptionIDGenerator
 		context.SdmSubscriptionIDGenerator = backupIDSet.SdmSubscriptionIDGenerator

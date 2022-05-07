@@ -213,31 +213,7 @@ func (udr *UDR) Start() {
 	}()
 
 	/* OpenSAF Checkpoint */
-	self.StartCkptSvc()
-	go func() {
-		for {
-			sigs := make(chan os.Signal, 1)
-			signal.Notify(sigs, syscall.SIGUSR1, syscall.SIGUSR2)
-			sig := <-sigs
-			fmt.Println("Signal:")
-			fmt.Println(sig)
-			if sig == syscall.SIGUSR1 {
-				fmt.Println("Swtiching to Active mode...")
-				self.GetUEGroupColl()
-				self.GetUESubsColl()
-				// self.GetSubscriptionData()
-				// self.GetPolicyData()
-				self.GetSubscriptionID()
-			} else if sig == syscall.SIGUSR2 {
-				fmt.Println("Swtiching to Standby mode...")
-				self.UpdateSubscriptionID()
-				self.UpdateUEGroupColl()
-				self.UpdateUESubsColl()
-				// self.UpdateSubscriptionData()
-				// self.UpdatePolicyData()
-			}
-		}
-	}()
+	go self.StartCkptSvc()
 
 	server, err := http2_util.NewServer(addr, udrLogPath, router)
 	if server == nil {

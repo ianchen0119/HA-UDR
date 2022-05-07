@@ -3,14 +3,11 @@ package main
 import (
 	"fmt"
 	"os"
-	"os/signal"
-	"syscall"
 
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
 
 	"github.com/free5gc/udr/logger"
-	udr_context "github.com/free5gc/udr/context"
 	udr_service "github.com/free5gc/udr/service"
 	"github.com/free5gc/version"
 )
