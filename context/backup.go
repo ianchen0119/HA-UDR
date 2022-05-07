@@ -35,12 +35,6 @@ type UESubsColl struct {
 	UESubsCollection                        sync.Map // map[ueId]*UESubsData
 }
 
-type Location struct {
-	X int32
-	Y int32
-	Z int32
-}
-
 func (context *UDRContext) StartCkptSvc() {
 	cpsv.Start("safCkpt=HAUDR,safApp=safCkptService")
 	for {
@@ -55,39 +49,14 @@ func (context *UDRContext) StartCkptSvc() {
 			context.GetUESubsColl()
 			// context.GetSubscriptionData()
 			// context.GetPolicyData()
-			// context.GetSubscriptionID()
-
-			readData, _ := cpsv.NonFixedLoad("udrSubId")
-			logger.DataRepoLog.Infoln("Get Subscription ID")
-			logger.DataRepoLog.Infoln(readData)
-			logger.DataRepoLog.Infoln(string(readData))
-			var backupIDSet BackupIDSet
-			json.Unmarshal(readData, &backupIDSet)
-			context.EeSubscriptionIDGenerator = backupIDSet.EeSubscriptionIDGenerator
-			context.SdmSubscriptionIDGenerator = backupIDSet.SdmSubscriptionIDGenerator
-			context.PolicyDataSubscriptionIDGenerator = backupIDSet.PolicyDataSubscriptionIDGenerator
-			context.SubscriptionDataSubscriptionIDGenerator = backupIDSet.SubscriptionDataSubscriptionIDGenerator
+			context.GetSubscriptionID()
 		} else if sig == syscall.SIGUSR2 {
 			fmt.Println("Swtiching to Standby mode...")
-			// context.UpdateSubscriptionID()
+			context.UpdateSubscriptionID()
 			context.UpdateUEGroupColl()
 			context.UpdateUESubsColl()
 			// context.UpdateSubscriptionData()
 			// context.UpdatePolicyData()
-
-
-			var backupIDSet BackupIDSet
-			backupIDSet.EeSubscriptionIDGenerator = context.EeSubscriptionIDGenerator
-			backupIDSet.SdmSubscriptionIDGenerator = context.SdmSubscriptionIDGenerator
-			backupIDSet.PolicyDataSubscriptionIDGenerator = context.PolicyDataSubscriptionIDGenerator
-			backupIDSet.SubscriptionDataSubscriptionIDGenerator = context.SubscriptionDataSubscriptionIDGenerator
-
-			jsonData, _ := json.Marshal(&backupIDSet)
-			length := len(jsonData)
-
-			logger.DataRepoLog.Infoln("Update Subscription ID")
-			logger.DataRepoLog.Infoln(jsonData)
-			cpsv.NonFixedStore("udrSubId", jsonData, int(length))
 		}
 	}
 }
