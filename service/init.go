@@ -195,6 +195,14 @@ func (udr *UDR) Start() {
 
 	addr := fmt.Sprintf("%s:%d", self.BindingIPv4, self.SBIPort)
 	profile := consumer.BuildNFInstance(self)
+
+	// waiting for the assignment from keepalived
+	stateChannel := make(chan os.Signal)
+	signal.Notify(stateChannel, syscall.SIGUSR1)
+	sig := <-stateChannel
+	fmt.Println("Receive the signal:")
+	fmt.Println(sig)
+
 	var newNrfUri string
 	var err error
 	newNrfUri, self.NfId, err = consumer.SendRegisterNFInstance(self.NrfUri, profile.NfInstanceId, profile)
