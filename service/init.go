@@ -204,6 +204,11 @@ func (udr *UDR) Start() {
 		sig := <-stateChannel
 		if sig == syscall.SIGUSR1 {
 			fmt.Println("Swtiching to Active mode...")
+			self.GetUEGroupColl()
+			self.GetUESubsColl()
+			// self.GetSubscriptionData()
+			// self.GetPolicyData()
+			self.GetSubscriptionID()
 			break
 		} else {
 			fmt.Println("Swtiching to Standby mode...")
