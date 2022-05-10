@@ -197,19 +197,30 @@ func (udr *UDR) Start() {
 	profile := consumer.BuildNFInstance(self)
 
 	// waiting for the assignment from keepalived
-	stateChannel := make(chan os.Signal)
-	signal.Notify(stateChannel, syscall.SIGUSR1)
-	sig := <-stateChannel
-	fmt.Println("Receive the signal:")
-	fmt.Println(sig)
+	backupToActive := false
+	for {
+		stateChannel := make(chan os.Signal)
+		signal.Notify(stateChannel, syscall.SIGUSR1, syscall.SIGUSR2)
+		sig := <-stateChannel
+		if sig == syscall.SIGUSR1 {
+			fmt.Println("Swtiching to Active mode...")
+			break
+		} else {
+			fmt.Println("Swtiching to Standby mode...")
+			backupToActive = true
+		}
+	}
 
-	var newNrfUri string
 	var err error
-	newNrfUri, self.NfId, err = consumer.SendRegisterNFInstance(self.NrfUri, profile.NfInstanceId, profile)
-	if err == nil {
-		self.NrfUri = newNrfUri
-	} else {
-		initLog.Errorf("Send Register NFInstance Error[%s]", err.Error())
+
+	if !backupToActive {
+		var newNrfUri string
+		newNrfUri, self.NfId, err = consumer.SendRegisterNFInstance(self.NrfUri, profile.NfInstanceId, profile)
+		if err == nil {
+			self.NrfUri = newNrfUri
+		} else {
+			initLog.Errorf("Send Register NFInstance Error[%s]", err.Error())
+		}
 	}
 
 	signalChannel := make(chan os.Signal, 1)
