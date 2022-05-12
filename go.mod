@@ -14,7 +14,7 @@ require (
 	github.com/free5gc/openapi v1.0.0
 	github.com/free5gc/path_util v1.0.0
 	github.com/free5gc/version v1.0.0
-	github.com/gin-gonic/gin v1.6.3
+	github.com/gin-gonic/gin v1.7.0
 	github.com/google/uuid v1.1.2
 	github.com/ianchen0119/GO-CPSV v0.0.0-20220507164437-fe38a5491095
 	github.com/mitchellh/mapstructure v1.4.0
